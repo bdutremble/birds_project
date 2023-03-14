@@ -1,96 +1,62 @@
 
-DROP TABLE IF EXISTS shape;
-DROP TABLE IF EXISTS size;
-DROP TABLE IF EXISTS behaviors;
-DROP TABLE IF EXISTS habitats;
-DROP TABLE IF EXISTS colors;
-DROP TABLE IF EXISTS images;
-DROP TABLE IF EXISTS birds;
+DROP TABLE IF EXISTS bird_habitat;
+DROP TABLE IF EXISTS diet;
+DROP TABLE IF EXISTS observation;
+DROP TABLE IF EXISTS bird;
+DROP TABLE IF EXISTS food;
+DROP TABLE IF EXISTS habitat;
 
-
-CREATE TABLE shapes (
-  model_pk int unsigned NOT NULL AUTO_INCREMENT,
-  model_id enum('GRAND_CHEROKEE', 'CHEROKEE', 'COMPASS', 'RENEGADE', 'WRANGLER', 'GLADIATOR', 'WRANGLER_4XE') NOT NULL,
-  trim_level varchar(40) NOT NULL,
-  num_doors int NOT NULL,
-  wheel_size int NOT NULL,
-  base_price decimal(9, 2) NOT NULL,
-  PRIMARY KEY (model_pk),
-  UNIQUE KEY (model_id, trim_level, num_doors)
+CREATE TABLE habitat (
+  habitat_pk int unsigned NOT NULL AUTO_INCREMENT,
+  habitat_type set('AQUATIC', 'WOODLAND', 'SCRUB-SHRUB', 'OPEN') NOT NULL,
+  PRIMARY KEY (habitat_pk)
 );
 
-CREATE TABLE images (
-  image_pk int unsigned NOT NULL AUTO_INCREMENT,
-  model_fk int unsigned NOT NULL,
-  image_id varchar(40) NOT NULL,
-  width int NOT NULL,
-  height int NOT NULL,
-  mime_type enum('image/jpeg', 'image/png'),
-  name varchar(256),
-  data mediumblob NOT NULL,
-  PRIMARY KEY (image_pk),
-  FOREIGN KEY (model_fk) REFERENCES models (model_pk)
+CREATE TABLE food (
+  food_pk int unsigned NOT NULL AUTO_INCREMENT,
+  food_id set('FRUIT', 'SEED', 'INVERTEBRATES','RODENTS', 'FISH') NOT NULL,
+  PRIMARY KEY (food_pk)
 );
 
-CREATE TABLE colors (
-  color_pk int unsigned NOT NULL AUTO_INCREMENT,
-  color_id varchar(30) NOT NULL,
-  color varchar(60) NOT NULL,
-  price decimal(9, 2) NOT NULL,
-  is_exterior boolean NOT NULL,
-  PRIMARY KEY (color_pk),
-  UNIQUE KEY (color_id)
+CREATE TABLE bird (
+  bird_pk int unsigned NOT NULL AUTO_INCREMENT,
+  common_name varchar(40) NOT NULL,
+  scientific_name varchar(80),
+  beak_color_id varchar(30),
+  head_color_id varchar(30),
+  torso_color_id varchar(30) NOT NULL,
+  wing_color_id varchar(30),
+  bird_size_id enum('SMALL', 'MEDIUM', 'LARGE') NOT NULL,
+  wingspan_cm int unsigned NOT NULL,
+  nest_type enum('GROUND', 'PLATFORM', 'CAVITY', 'BOWL', 'WILD') NOT NULL,
+  PRIMARY KEY (bird_pk)
 );
 
-CREATE TABLE habitats (
-  engine_pk int unsigned NOT NULL AUTO_INCREMENT,
-  engine_id varchar(30) NOT NULL,
-  size_in_liters decimal(5, 2) NOT NULL,
-  name varchar(60) NOT NULL,
-  fuel_type enum('GASOLINE', 'DIESEL', 'HYBRID') NOT NULL,
-  mpg_city decimal(7, 2) NOT NULL,
-  mpg_hwy decimal(7, 2) NOT NULL,
-  has_start_stop boolean NOT NULL,
-  description varchar(500) NOT NULL,
-  price decimal(9, 2),
-  PRIMARY KEY (engine_pk),
-  UNIQUE KEY (engine_id)
+CREATE TABLE observation (
+  observation_pk int unsigned NOT NULL AUTO_INCREMENT,
+  bird_fk int unsigned NOT NULL,
+  observation_time TIMESTAMP NOT NULL,
+  observation_location varchar(30) NOT NULL,
+  PRIMARY KEY (observation_pk),
+  FOREIGN KEY (bird_fk) REFERENCES bird (bird_pk) ON DELETE CASCADE
 );
 
-CREATE TABLE behaviors (
-  tire_pk int unsigned NOT NULL AUTO_INCREMENT,
-  tire_id varchar(30) NOT NULL, 
-  tire_size varchar(128) NOT NULL,
-  manufacturer varchar(70) NOT NULL,
-  price decimal(7, 2) NOT NULL,
-  warranty_miles int NOT NULL,
-  PRIMARY KEY (tire_pk),
-  UNIQUE KEY (tire_id)
+CREATE TABLE diet (
+  bird_id int unsigned NOT NULL,
+  food_id int unsigned NOT NULL,
+  CONSTRAINT diet_pk PRIMARY KEY (bird_id, food_id),
+  CONSTRAINT diet_bird_fk
+      FOREIGN KEY (bird_id) REFERENCES bird (bird_pk),
+  CONSTRAINT diet_food_fk 
+      FOREIGN KEY (food_id) REFERENCES food (food_pk) ON DELETE CASCADE
 );
 
-CREATE TABLE size (
-  option_pk int unsigned NOT NULL AUTO_INCREMENT,
-  option_id varchar(30) NOT NULL,
-  category enum('DOOR', 'EXTERIOR', 'INTERIOR', 'STORAGE', 'TOP', 'WHEEL') NOT NULL,
-  manufacturer varchar(60) NOT NULL,
-  name varchar(60) NOT NULL,
-  price decimal(9, 2) NOT NULL,
-  PRIMARY KEY (option_pk),
-  UNIQUE KEY (option_id)
-);
-
-CREATE TABLE birds (
-  order_pk int unsigned NOT NULL AUTO_INCREMENT,
-  customer_fk int unsigned NOT NULL,
-  color_fk int unsigned NOT NULL,
-  engine_fk int unsigned NOT NULL,
-  tire_fk int unsigned NOT NULL,
-  model_fk int unsigned NOT NULL,
-  price decimal(9, 2) NOT NULL,
-  PRIMARY KEY (order_pk),
-  FOREIGN KEY (customer_fk) REFERENCES customers (customer_pk) ON DELETE CASCADE,
-  FOREIGN KEY (color_fk) REFERENCES colors (color_pk) ON DELETE CASCADE,
-  FOREIGN KEY (engine_fk) REFERENCES engines (engine_pk) ON DELETE CASCADE,
-  FOREIGN KEY (tire_fk) REFERENCES tires (tire_pk) ON DELETE CASCADE,
-  FOREIGN KEY (model_fk) REFERENCES models (model_pk) ON DELETE CASCADE
+CREATE TABLE bird_habitat (
+  bird_id int unsigned NOT NULL,
+  habitat_id int unsigned NOT NULL,
+  CONSTRAINT bird_habitat_pk PRIMARY KEY (bird_id, habitat_id),
+  CONSTRAINT bird_habitat_bird_fk
+      FOREIGN KEY (bird_id) REFERENCES bird (bird_pk),
+  CONSTRAINT bird_habitat_habitat_fk 
+      FOREIGN KEY (habitat_id) REFERENCES habitat (habitat_pk) ON DELETE CASCADE
 );
