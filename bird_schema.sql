@@ -2,6 +2,7 @@
 DROP TABLE IF EXISTS bird_habitat;
 DROP TABLE IF EXISTS diet;
 DROP TABLE IF EXISTS observation;
+DROP TABLE IF EXISTS coloration;
 DROP TABLE IF EXISTS bird;
 DROP TABLE IF EXISTS food;
 DROP TABLE IF EXISTS habitat;
@@ -9,12 +10,14 @@ DROP TABLE IF EXISTS habitat;
 CREATE TABLE habitat (
   habitat_pk int unsigned NOT NULL AUTO_INCREMENT,
   habitat_type set('AQUATIC', 'WOODLAND', 'SCRUB-SHRUB', 'OPEN') NOT NULL,
+  habitat_description text,
   PRIMARY KEY (habitat_pk)
 );
 
 CREATE TABLE food (
   food_pk int unsigned NOT NULL AUTO_INCREMENT,
-  food_id set('FRUIT', 'SEED', 'INVERTEBRATES','RODENTS', 'FISH') NOT NULL,
+  food_name varchar(80),
+  food_type set('FRUIT', 'SEED', 'INVERTEBRATES','RODENTS', 'FISH') NOT NULL,
   PRIMARY KEY (food_pk)
 );
 
@@ -22,14 +25,36 @@ CREATE TABLE bird (
   bird_pk int unsigned NOT NULL AUTO_INCREMENT,
   common_name varchar(40) NOT NULL,
   scientific_name varchar(80),
+  PRIMARY KEY (bird_pk)
+);
+
+CREATE TABLE nest_type (
+  nest_type_pk int unsigned NOT NULL AUTO_INCREMENT,
+  bird_fk int unsigned NOT NULL,
+  nest_type enum('GROUND', 'PLATFORM', 'CAVITY', 'BOWL', 'WILD'),
+  nest_description text,
+  PRIMARY KEY (nest_type_pk),
+  FOREIGN KEY (bird_fk) REFERENCES bird (bird_pk) ON DELETE CASCADE
+);
+
+CREATE TABLE bird_size (
+  size_pk int unsigned NOT NULL AUTO_INCREMENT,
+  bird_fk int unsigned NOT NULL,
+  bird_size_id enum('SMALL', 'MEDIUM', 'LARGE'),
+  wingspan_cm int unsigned,
+  PRIMARY KEY (size_pk),
+  FOREIGN KEY (bird_fk) REFERENCES bird (bird_pk) ON DELETE CASCADE
+);
+
+CREATE TABLE coloration (
+  coloration_pk int unsigned NOT NULL AUTO_INCREMENT,
+  bird_fk int unsigned NOT NULL,
   beak_color_id varchar(30),
   head_color_id varchar(30),
-  torso_color_id varchar(30) NOT NULL,
+  torso_color_id varchar(30),
   wing_color_id varchar(30),
-  bird_size_id enum('SMALL', 'MEDIUM', 'LARGE') NOT NULL,
-  wingspan_cm int unsigned NOT NULL,
-  nest_type enum('GROUND', 'PLATFORM', 'CAVITY', 'BOWL', 'WILD') NOT NULL,
-  PRIMARY KEY (bird_pk)
+  PRIMARY KEY (coloration_pk),
+  FOREIGN KEY (bird_fk) REFERENCES bird (bird_pk) ON DELETE CASCADE
 );
 
 CREATE TABLE observation (

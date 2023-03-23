@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    password: birds
+    username: birds
+    url: jdbc:mysql://localhost:3306/birds
+
+logging:
+  level:
+    root: warn
+    '[com.briandutremble]': debug
