@@ -53,13 +53,6 @@ public class BirdService {
   }
 
 
-//  @Transactional(readOnly = false)
-//  public Bird addBird(AddBirdRequest birdRequest) {
-//    log.info("Service: Adding bird {}", birdRequest);
-//    return birdDao.insertBird(birdRequest);
-//  }
-//
-
   @Transactional(readOnly = false)
   public Bird modifyBird(Bird bird) {
     if (!birdDao.modifyBird(bird)) {

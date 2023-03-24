@@ -31,9 +31,8 @@ public class Bird {
   
   @NotBlank
   private String birdSex;
-  private List<String> coloration;
-  private BirdSize birdSize; 
-  //private List<String> nestType;
+ // private List<String> coloration;
+  //private BirdSize birdSize;
   
   @NotBlank
   private List<String> habitatTypes;

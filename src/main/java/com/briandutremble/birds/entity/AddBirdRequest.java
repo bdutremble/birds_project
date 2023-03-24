@@ -20,24 +20,21 @@ public class AddBirdRequest {
   @Pattern(regexp = "[\\w\\s]*")
   private String scientificName;
   
-  private BirdSex birdSex;
+  private String birdSex;
  
-  private LinkedList<String> coloration;
-  private LinkedList<String> nestType;
+//  private LinkedList<String> coloration;
+//  private LinkedList<String> nestType;
   private LinkedList<String> habitatTypes;
   
   
-  @Min(0)
-  @Max(300)
-  private int wingSpan;
-  
-  private BirdSize birdSize;
+  //private BirdSize birdSize;
 
   @Builder
-  public AddBirdRequest(String commonName, String scientificName) {
+  public AddBirdRequest(String commonName, String scientificName, String birdSex) {
     this.commonName = commonName;
     this.scientificName = scientificName;
-    this.coloration = new LinkedList<>();
+    this.birdSex = birdSex;
+//    this.coloration = new LinkedList<>();
     this.habitatTypes = new LinkedList<>();
   }
 
