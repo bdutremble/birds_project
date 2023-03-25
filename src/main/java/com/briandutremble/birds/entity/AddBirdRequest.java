@@ -2,8 +2,6 @@ package com.briandutremble.birds.entity;
 
 import java.util.LinkedList;
 import java.util.List;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
@@ -29,8 +27,6 @@ public class AddBirdRequest {
   private LinkedList<String> habitatTypes;
   
   
-  
-  //private BirdSize birdSize;
 
   @Builder
   public AddBirdRequest(String commonName, String scientificName, String birdSex) {

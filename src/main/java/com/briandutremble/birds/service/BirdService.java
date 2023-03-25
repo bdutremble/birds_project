@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.briandutremble.birds.dao.BirdDao;
 import com.briandutremble.birds.entity.AddBirdRequest;
+import com.briandutremble.birds.entity.AddObservationRequest;
 import com.briandutremble.birds.entity.Bird;
 import com.briandutremble.birds.entity.Coloration;
+import com.briandutremble.birds.entity.Observation;
 import com.briandutremble.birds.errorhandler.DeleteBirdException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -78,4 +80,5 @@ public class BirdService {
     log.info("Service: Adding bird {}", birdRequest);
     return birdDao.insertBird(birdRequest);
   }
+
 }

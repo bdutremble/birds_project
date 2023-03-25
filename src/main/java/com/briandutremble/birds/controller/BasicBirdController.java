@@ -8,7 +8,9 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import com.briandutremble.birds.entity.AddBirdRequest;
+import com.briandutremble.birds.entity.AddObservationRequest;
 import com.briandutremble.birds.entity.Bird;
+import com.briandutremble.birds.entity.Observation;
 import com.briandutremble.birds.service.BirdService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,5 +53,6 @@ public class BasicBirdController implements BirdController {
     log.info("Controller: Delete bird with ID={}", birdId);
     birdService.deleteBird(birdId);
   }
+  
 
 }

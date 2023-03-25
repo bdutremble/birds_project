@@ -6,6 +6,7 @@ package com.briandutremble.birds.dao;
 import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +20,11 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import com.briandutremble.birds.entity.AddBirdRequest;
 import com.briandutremble.birds.entity.AddColorationRequest;
+import com.briandutremble.birds.entity.AddObservationRequest;
 import com.briandutremble.birds.entity.Bird;
 import com.briandutremble.birds.entity.Coloration;
 import com.briandutremble.birds.entity.Habitat;
+import com.briandutremble.birds.entity.Observation;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,9 +48,6 @@ public class BirdDao {
   private static final String HABITAT_ID = "habitat_id";
   private static final String HABITAT_TYPE = "habitat_type";
   private static final String BIRD_HABITAT_TABLE = "bird_habitat";
-  private static final String FOOD_TABLE = "food";
-  private static final String NEST_TYPE_TABLE = "nest_type";
-  private static final String BIRD_SIZE_TABLE = "bird_size";
   private static final String COLORATION_TABLE = "coloration";
   private static final String BIRD_COLORATION_TABLE = "bird_coloration";
   private static final String BIRD_TABLE = "bird";
@@ -55,8 +55,8 @@ public class BirdDao {
   private static final String BIRD_SEX = "bird_sex_id";
   private static final String SCIENTIFIC_NAME = "scientific_name";
   private static final String BIRD_ID = "bird_id";
-  private static final String DIET_TABLE = "diet";
-  private static final String OBSERVATION_TABLE = "observation";
+  
+  
   
  
   @Autowired
@@ -276,10 +276,10 @@ public class BirdDao {
 
     String sql = """
         INSERT INTO %s
-        (%s, %s)
+        (%s, %s, %s)
         VALUES
         (:%s, :%s, :%s)
-        """.formatted(BIRD_TABLE, COMMON_NAME, SCIENTIFIC_NAME, COMMON_NAME, SCIENTIFIC_NAME, BIRD_SEX);
+        """.formatted(BIRD_TABLE, COMMON_NAME, SCIENTIFIC_NAME, BIRD_SEX, COMMON_NAME, SCIENTIFIC_NAME, BIRD_SEX);
 
     Map<String, Object> paramMap =
         Map.of(COMMON_NAME, birdRequest.getCommonName(), SCIENTIFIC_NAME, birdRequest.getScientificName(),
@@ -345,14 +345,13 @@ public class BirdDao {
 
 
 private void insertBirdColoration(Integer birdId, List<Coloration> coloration) {
-  
   String sql = """
       INSERT INTO %s (%s, %s)
       VALUES
       (:%s, :%s)
       """.formatted(BIRD_COLORATION_TABLE, BIRD_ID, COLORATION_ID, BIRD_ID, COLORATION_ID);
 
-  Map<String, Object> params = Map.of(BIRD_ID, birdId, COLORATION_ID, coloration.getColorationId());
+  Map<String, Object> params = Map.of(BIRD_ID, birdId, COLORATION_ID, coloration.get(0).getColorationId());
   jdbcTemplate.update(sql, params);
 }
 
