@@ -3,6 +3,7 @@
  */
 package com.briandutremble.birds.entity;
 
+import java.util.LinkedList;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Coloration {
+public class AddColorationRequest {
 
   private int colorationId;
   private int birdId;
@@ -26,9 +27,8 @@ public class Coloration {
   
   
   @Builder
-  public Coloration(Integer colorationId, Integer birdId, String beakColor, String headColor, String torsoColor, String wingColor) {
+  public AddColorationRequest(Integer colorationId, Integer birdId, String beakColor, String headColor, String torsoColor, String wingColor) {
     this.colorationId = colorationId;
-    this.birdId = birdId;
     this.beakColor = beakColor;
     this.headColor = headColor;
     this.torsoColor = torsoColor;

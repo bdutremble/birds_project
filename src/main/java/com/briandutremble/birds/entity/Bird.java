@@ -14,7 +14,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Bird {
@@ -31,17 +30,18 @@ public class Bird {
   
   @NotBlank
   private String birdSex;
- // private List<String> coloration;
-  //private BirdSize birdSize;
+  private List<Coloration> coloration;
   
-  @NotBlank
+  @NotNull
   private List<String> habitatTypes;
   
+  @Builder
   public Bird(Integer birdId, String commonName, String scientificName, String birdSex) {
     this.birdId = birdId;
     this.commonName = commonName;
     this.scientificName = scientificName;
     this.birdSex = birdSex;
+    this.coloration = new LinkedList<>();
     this.habitatTypes = new LinkedList<>();
   }
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.briandutremble.birds.dao.BirdDao;
 import com.briandutremble.birds.entity.AddBirdRequest;
 import com.briandutremble.birds.entity.Bird;
+import com.briandutremble.birds.entity.Coloration;
 import com.briandutremble.birds.errorhandler.DeleteBirdException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +33,7 @@ public class BirdService {
     List<Bird> birds = birdDao.getAllBirds();
 
     birds.forEach(bird -> {
-      //bird.getColoration().addAll(birdDao.fetchColoration(bird.getBirdId()));
+      bird.getColoration().addAll(birdDao.getBirdColoration(bird.getBirdId()));
       bird.getHabitatTypes().addAll(birdDao.getBirdHabitats(bird.getBirdId()));
     });
 
@@ -45,10 +46,9 @@ public class BirdService {
 
     Bird bird = birdDao.getBird(birdId)
         .orElseThrow(() -> new NoSuchElementException("Unknown bird with bird ID=" + birdId));
-
-    //bird.getColoration().addAll(birdDao.getColoration(birdId));
+    
     bird.getHabitatTypes().addAll(birdDao.getBirdHabitats(birdId));
-
+    bird.getColoration().addAll(birdDao.getBirdColoration(birdId));
     return bird;
   }
 
