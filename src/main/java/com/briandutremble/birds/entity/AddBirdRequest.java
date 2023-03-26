@@ -21,7 +21,7 @@ public class AddBirdRequest {
   
   private String birdSex;
  
-  private List<Coloration> coloration;
+//  private List<Coloration> coloration;
 
 //  private LinkedList<String> nestType;
   private LinkedList<String> habitatTypes;
@@ -33,7 +33,7 @@ public class AddBirdRequest {
     this.commonName = commonName;
     this.scientificName = scientificName;
     this.birdSex = birdSex;
-    this.coloration = new LinkedList<>();
+//    this.coloration = new LinkedList<>();
   
     this.habitatTypes = new LinkedList<>();
   }

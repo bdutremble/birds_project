@@ -265,7 +265,7 @@ public class BirdDao {
     if (updated) {
       
       updateBirdHabitat(birdRequest.getBirdId(), birdRequest.getHabitatTypes());
-      updateBirdColoration(birdRequest.getBirdId(), birdRequest.getColoration());
+//      updateBirdColoration(birdRequest.getBirdId(), birdRequest.getColoration());
     }
 
     return updated;
@@ -292,8 +292,9 @@ public class BirdDao {
 
     @SuppressWarnings("java:S2259")
     int birdId = keyHolder.getKeyAs(BigInteger.class).intValue();
-
+    
     insertBirdHabitats(birdId, birdRequest.getHabitatTypes());
+//    insertBirdColoration(birdId, birdRequest.getColoration());
 
     Bird bird = Bird
         .builder() // @formatter:off
@@ -304,7 +305,7 @@ public class BirdDao {
           .build();// @formatter:on
 
     bird.getHabitatTypes().addAll(birdRequest.getHabitatTypes());
-    bird.getColoration().addAll(birdRequest.getColoration());
+//    bird.getColoration().addAll(birdRequest.getColoration());
 
     return bird;
   }
@@ -353,6 +354,8 @@ private void insertBirdColoration(Integer birdId, List<Coloration> coloration) {
 
   Map<String, Object> params = Map.of(BIRD_ID, birdId, COLORATION_ID, coloration.get(0).getColorationId());
   jdbcTemplate.update(sql, params);
+  
+  insertColoration(coloration);
 }
 
 private void deleteBirdColoration(Integer birdId) {
@@ -365,5 +368,76 @@ private void deleteBirdColoration(Integer birdId) {
   Map<String, Object> params = Map.of(BIRD_ID, birdId);
   jdbcTemplate.update(sql, params);
 }
+
+private Coloration insertColoration(List<Coloration> coloration) {
+  
+  String sql = """
+      INSERT INTO %s
+      (%s, %s, %s, %s)
+      VALUES
+      (:%s, :%s, :%s, :%s)
+      """.formatted(COLORATION_TABLE, BEAK_COLOR, HEAD_COLOR, TORSO_COLOR, WING_COLOR, BEAK_COLOR, HEAD_COLOR, TORSO_COLOR, WING_COLOR);
+
+  SqlParameterSource params = new MapSqlParameterSource(Map.of(BEAK_COLOR,coloration.get(0).getBeakColor(), 
+      HEAD_COLOR, coloration.get(0).getHeadColor(), TORSO_COLOR, coloration.get(0).getTorsoColor(), 
+      WING_COLOR, coloration.get(0).getWingColor()));
+  KeyHolder keyHolder = new GeneratedKeyHolder();
+
+  jdbcTemplate.update(sql, params, keyHolder);
+
+  @SuppressWarnings("java:S2259")
+  int colorationId = keyHolder.getKeyAs(BigInteger.class).intValue();
+
+  return Coloration
+      .builder() // @formatter:off
+        .colorationId(colorationId)
+        .beakColor(coloration.get(0).getBeakColor())
+        .headColor(coloration.get(0).getHeadColor())
+        .torsoColor(coloration.get(0).getTorsoColor())
+        .wingColor(coloration.get(0).getWingColor())
+        .build(); // @formatter:on
+}
+
+//private List<Habitat> getOrCreateColoration(List<Coloration> coloration) {
+////  List<Habitat> habitats = new LinkedList<>();
+//
+//  coloration.forEach(coloration -> {
+//  
+//    Optional<Habitat> optionalColoration = getColorationByName(coloration.get(0).getBeakColor());
+//
+//    if (optionalColoration.isPresent()) {
+//      
+//      habitats.add(optionalColoration.get());
+//    } else {
+//      
+//      habitats.add(insertHabitat(habitatName));
+//    }
+//  });
+//
+//  return habitats;
+//}
+//
+//private Optional<Coloration> getColorationByName(String coloration) {
+//
+//  String sql = """
+//      SELECT *
+//      FROM %s
+//      WHERE %s = :%s
+//      """.formatted(HABITAT_TABLE, HABITAT_TYPE, HABITAT_TYPE);
+//
+//  SqlParameterSource params = new MapSqlParameterSource(Map.of(HABITAT_TYPE, habitatName));
+//
+//  return Optional.ofNullable(jdbcTemplate.query(sql, params, (ResultSet rs) -> {
+//    if (rs.next()) {
+//      return Coloration
+//          .builder() // @formatter:off
+//          .habitatId(rs.getInt(HABITAT_ID))
+//          .habitatType(rs.getString(HABITAT_TYPE))
+//          .build(); // @formatter:on
+//    }
+//
+//    return null;
+//  }));
+//}
 
 }
